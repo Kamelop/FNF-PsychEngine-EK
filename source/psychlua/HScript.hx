@@ -8,11 +8,19 @@ import psychlua.CustomSubstate;
 #if LUA_ALLOWED
 import psychlua.FunkinLua;
 #end
-
+	
 #if HSCRIPT_ALLOWED
-import tea.SScript;
-class HScript extends SScript
+import crowplexus.iris.Iris;
+
+typedef IrisCall = {
+	var methodName:String;
+	var methodReturn:Dynamic;
+	var methodVal:Dynamic;
+};
+
+class HScript extends Iris
 {
+	public var filePath:String;
 	public var modFolder:String;
 
 	#if LUA_ALLOWED
@@ -35,12 +43,16 @@ class HScript extends SScript
 			parent.hscript = new HScript(parent, code, varsToBring);
 		}
 		else
+			hs.varsToBring = varsToBring;
 		{
-			hs.doString(code);
-			@:privateAccess
-			if(hs.parsingException != null)
+			try
 			{
-				PlayState.instance.addTextToDebug('ERROR ON LOADING (${hs.origin}): ${hs.parsingException.message}', FlxColor.RED);
+				hs.scriptStr = code;
+				hs.execute();
+			}
+			catch(e:Dynamic)
+			{
+				FunkinLua.luaTrace('ERROR (${hs.origin}) - $e', false, false, FlxColor.RED);
 			}
 		}
 	}
@@ -54,7 +66,7 @@ class HScript extends SScript
 
 		this.varsToBring = varsToBring;
 	
-		super(file, false, false);
+		super(null, {name: "hscript-iris", autoRun: false, preset: false});
 
 		#if LUA_ALLOWED
 		parentLua = parent;
