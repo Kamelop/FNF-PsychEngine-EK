@@ -68,10 +68,9 @@
 		},
 		{
 			"name": "linc_luajit",
-                        "type": "git",
-                        "dir": null,
-                        "ref": "main",
-                        "url": "https://github.com/mcagabe19-stuff/linc_luajit-rewriten.git"
+			"type": "git",
+			"dir": null,
+			"url": "https://github.com/kittycathy233/linc_luajit.git"
 		},
 		{
 			"name": "hxdiscord_rpc",
